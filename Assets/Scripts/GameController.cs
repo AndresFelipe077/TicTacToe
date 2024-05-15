@@ -37,6 +37,11 @@ public class GameController : MonoBehaviour
 
     public GameObject startInfo;
 
+    private string computerSide;
+    public bool playerMove;
+    public float delay;
+    private int value;
+
     void Awake()
     {
         gameOverPanel.SetActive(false);
@@ -45,6 +50,25 @@ public class GameController : MonoBehaviour
         moveCount = 0;
         restartButton.SetActive(false);
         // SetPlayerColors(playerX, playerO);
+        playerMove = true;
+    }
+
+    private void Update()
+    {
+        if (playerMove == false)
+        {
+            delay += delay * Time.deltaTime;
+            if (delay >= 100)
+            {
+                value = Random.Range(0, 8);
+                if (buttonList[value].GetComponentInParent<Button>().interactable == true)
+                {
+                    buttonList[value].text = GetComputerSide();
+                    buttonList[value].GetComponentInParent<Button>().interactable = false;
+                    EndTurn();
+                }
+            }
+        }
     }
 
     void SetGameControllerReferenceOnButtons()
@@ -60,10 +84,12 @@ public class GameController : MonoBehaviour
         playerSide = startingSide;
         if (playerSide == "X")
         {
+            computerSide = "O";
             SetPlayerColors(playerX, playerO);
         }
         else
         {
+            computerSide = "X";
             SetPlayerColors(playerO, playerX);
         }
 
@@ -81,6 +107,11 @@ public class GameController : MonoBehaviour
     public string GetPlayerSide()
     {
         return playerSide;
+    }
+
+    public string GetComputerSide()
+    {
+        return computerSide;
     }
 
     public void EndTurn()
@@ -166,9 +197,11 @@ public class GameController : MonoBehaviour
 
     void ChangeSides()
     {
-        playerSide = (playerSide == "X") ? "O" : "X";
+        // playerSide = (playerSide == "X") ? "O" : "X";
+        playerMove = (playerMove == true) ? false : true;
 
-        if (playerSide == "X")
+        // if (playerSide == "X")
+        if (playerMove)
         {
             SetPlayerColors(playerX, playerO);
         }
@@ -194,7 +227,9 @@ public class GameController : MonoBehaviour
         SetPlayerButtons(true);
         SetPlayerColorsInactive();
         startInfo.SetActive(true);
-        // SetPlayerColors(playerX, playerO); 
+        // SetPlayerColors(playerX, playerO);
+        playerMove = true;
+        delay = 10;
 
         for (int i = 0; i < buttonList.Length; i++)
         {
