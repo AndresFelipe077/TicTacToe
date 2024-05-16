@@ -23,7 +23,6 @@ public class GameController : MonoBehaviour
     public string playerSide;
 
     public GameObject gameOverPanel;
-    // public Text gameOverText;
     [SerializeField] public TextMeshProUGUI gameOverText;
 
     private int moveCount;
@@ -46,10 +45,8 @@ public class GameController : MonoBehaviour
     {
         gameOverPanel.SetActive(false);
         SetGameControllerReferenceOnButtons();
-        // playerSide = "X";
         moveCount = 0;
         restartButton.SetActive(false);
-        // SetPlayerColors(playerX, playerO);
         playerMove = true;
     }
 
@@ -60,7 +57,7 @@ public class GameController : MonoBehaviour
             delay += delay * Time.deltaTime;
             if (delay >= 100)
             {
-                value = Random.Range(0, 8);
+                value = UnityEngine.Random.Range(0, 8);
                 if (buttonList[value].GetComponentInParent<Button>().interactable == true)
                 {
                     buttonList[value].text = GetComputerSide();
@@ -85,12 +82,12 @@ public class GameController : MonoBehaviour
         if (playerSide == "X")
         {
             computerSide = "O";
-            SetPlayerColors(playerX, playerO);
+            //SetPlayerColors(playerX, playerO);
         }
         else
         {
             computerSide = "X";
-            SetPlayerColors(playerO, playerX);
+            //SetPlayerColors(playerO, playerX);
         }
 
         StartGame();
@@ -118,52 +115,29 @@ public class GameController : MonoBehaviour
     {
         moveCount++;
 
-        if (buttonList[0].text == playerSide && buttonList[1].text == playerSide && buttonList[2].text == playerSide)
+        // Comprueba si hay un ganador en las filas, columnas y diagonales
+        if (CheckForWinner(0, 1, 2) || CheckForWinner(3, 4, 5) || CheckForWinner(6, 7, 8) ||
+            CheckForWinner(0, 3, 6) || CheckForWinner(1, 4, 7) || CheckForWinner(2, 5, 8) ||
+            CheckForWinner(0, 4, 8) || CheckForWinner(2, 4, 6))
         {
             GameOver(playerSide);
         }
-
-        if (buttonList[3].text == playerSide && buttonList[4].text == playerSide && buttonList[5].text == playerSide)
-        {
-            GameOver(playerSide);
-        }
-
-        if (buttonList[6].text == playerSide && buttonList[7].text == playerSide && buttonList[8].text == playerSide)
-        {
-            GameOver(playerSide);
-        }
-
-        if (buttonList[0].text == playerSide && buttonList[3].text == playerSide && buttonList[6].text == playerSide)
-        {
-            GameOver(playerSide);
-        }
-
-        if (buttonList[1].text == playerSide && buttonList[4].text == playerSide && buttonList[7].text == playerSide)
-        {
-            GameOver(playerSide);
-        }
-
-        if (buttonList[2].text == playerSide && buttonList[5].text == playerSide && buttonList[8].text == playerSide)
-        {
-            GameOver(playerSide);
-        }
-
-        if (buttonList[0].text == playerSide && buttonList[4].text == playerSide && buttonList[8].text == playerSide)
-        {
-            GameOver(playerSide);
-        }
-
-        if (buttonList[2].text == playerSide && buttonList[4].text == playerSide && buttonList[6].text == playerSide)
-        {
-            GameOver(playerSide);
-        }
-
-        if (moveCount >= 9)
+        else if (moveCount >= 9)
         {
             GameOver("empate");
         }
+        else
+        {
+            ChangeSides();
+        }
+    }
 
-        ChangeSides();
+    private bool CheckForWinner(int a, int b, int c)
+    {
+        // Convertir los valores de texto en los botones a mayúsculas y comparar
+        return buttonList[a].text == playerSide &&
+               buttonList[b].text == playerSide &&
+               buttonList[c].text == playerSide;
     }
 
     void SetPlayerColors(Player newPlayer, Player oldPlayer)
@@ -184,7 +158,7 @@ public class GameController : MonoBehaviour
         if (winningPlayer == "empate")
         {
             SetGameOverText("Empate!!!");
-            SetPlayerColorsInactive();
+            //SetPlayerColorsInactive();
         }
         else
         {
@@ -197,18 +171,16 @@ public class GameController : MonoBehaviour
 
     void ChangeSides()
     {
-        // playerSide = (playerSide == "X") ? "O" : "X";
         playerMove = (playerMove == true) ? false : true;
 
-        // if (playerSide == "X")
-        if (playerMove)
-        {
-            SetPlayerColors(playerX, playerO);
-        }
-        else
-        {
-            SetPlayerColors(playerO, playerX);
-        }
+        //if (playerMove)
+        //{
+        //SetPlayerColors(playerX, playerO);
+        //}
+        //else
+        //{
+        //SetPlayerColors(playerO, playerX);
+        //}
     }
 
     void SetGameOverText(string value)
@@ -220,14 +192,12 @@ public class GameController : MonoBehaviour
     public void RestartGame()
     {
 
-        // playerSide = "X";
         moveCount = 0;
         gameOverPanel.SetActive(false);
         restartButton.SetActive(false);
         SetPlayerButtons(true);
-        SetPlayerColorsInactive();
+        // SetPlayerColorsInactive();
         startInfo.SetActive(true);
-        // SetPlayerColors(playerX, playerO);
         playerMove = true;
         delay = 10;
 
