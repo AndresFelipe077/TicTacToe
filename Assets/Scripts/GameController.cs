@@ -122,6 +122,12 @@ public class GameController : MonoBehaviour
         {
             GameOver(playerSide);
         }
+        else if (CheckForWinnerMachine(0, 1, 2) || CheckForWinnerMachine(3, 4, 5) || CheckForWinnerMachine(6, 7, 8) ||
+            CheckForWinnerMachine(0, 3, 6) || CheckForWinnerMachine(1, 4, 7) || CheckForWinnerMachine(2, 5, 8) ||
+            CheckForWinnerMachine(0, 4, 8) || CheckForWinnerMachine(2, 4, 6))
+        {
+            GameOver(computerSide);
+        }
         else if (moveCount >= 9)
         {
             GameOver("empate");
@@ -136,8 +142,15 @@ public class GameController : MonoBehaviour
     {
         // Convertir los valores de texto en los botones a mayúsculas y comparar
         return buttonList[a].text == playerSide &&
-               buttonList[b].text == playerSide &&
-               buttonList[c].text == playerSide;
+                buttonList[b].text == playerSide &&
+                buttonList[c].text == playerSide;
+    }
+
+    private bool CheckForWinnerMachine(int a, int b, int c)
+    {
+        return buttonList[a].text == GetComputerSide() &&
+               buttonList[b].text == GetComputerSide() &&
+               buttonList[c].text == GetComputerSide();
     }
 
     void SetPlayerColors(Player newPlayer, Player oldPlayer)
@@ -153,20 +166,25 @@ public class GameController : MonoBehaviour
     /// </summary>
     void GameOver(string winningPlayer)
     {
+
+        Debug.Log(winningPlayer);
+
         SetBoardInteratable(false);
 
         if (winningPlayer == "empate")
         {
-            SetGameOverText("Empate!!!");
-            //SetPlayerColorsInactive();
+            SetGameOverText("¡Empate!");
         }
-        else
+        else if (winningPlayer == GetComputerSide())
         {
-            SetGameOverText(playerSide + " Gano!!!");
+            SetGameOverText("¡" + GetComputerSide() + " ganó!");
+        }
+        else if (winningPlayer == playerSide)
+        {
+            SetGameOverText("¡" + playerSide + " ganó!");
         }
 
         restartButton.SetActive(true);
-
     }
 
     void ChangeSides()
