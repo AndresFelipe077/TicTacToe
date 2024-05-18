@@ -8,11 +8,18 @@ public class GridSpace : MonoBehaviour
 
     private GameController gameController;
 
+    /// <summary>
+    /// Set the game controller reference
+    /// </summary>
+    /// <param name="controller"></param>
     public void SetGameControllerReference(GameController controller)
     {
         gameController = controller;
     }
 
+    /// <summary>
+    /// Sending movements and interactive buttons.
+    /// </summary>
     public void SetSpace()
     {
         if (gameController.playerMove == true)

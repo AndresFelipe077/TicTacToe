@@ -68,6 +68,9 @@ public class GameController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set reference of buttons
+    /// </summary>
     void SetGameControllerReferenceOnButtons()
     {
         for (int i = 0; i < buttonList.Length; i++)
@@ -76,24 +79,29 @@ public class GameController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set player to start game
+    /// </summary>
+    /// <param name="startingSide"></param>
     public void SetStartingSide(string startingSide)
     {
         playerSide = startingSide;
         if (playerSide == "X")
         {
             computerSide = "O";
-            //SetPlayerColors(playerX, playerO);
         }
         else
         {
             computerSide = "X";
-            //SetPlayerColors(playerO, playerX);
         }
 
         StartGame();
 
     }
 
+    /// <summary>
+    /// Start the game
+    /// </summary>
     void StartGame()
     {
         SetBoardInteratable(true);
@@ -101,16 +109,27 @@ public class GameController : MonoBehaviour
         startInfo.SetActive(false);
     }
 
+    /// <summary>
+    /// Get my player
+    /// </summary>
+    /// <returns></returns>
     public string GetPlayerSide()
     {
         return playerSide;
     }
 
+    /// <summary>
+    /// Get player machine
+    /// </summary>
+    /// <returns></returns>
     public string GetComputerSide()
     {
         return computerSide;
     }
 
+    /// <summary>
+    /// Turn of players
+    /// </summary>
     public void EndTurn()
     {
         moveCount++;
@@ -123,8 +142,8 @@ public class GameController : MonoBehaviour
             GameOver(playerSide);
         }
         else if (CheckForWinnerMachine(0, 1, 2) || CheckForWinnerMachine(3, 4, 5) || CheckForWinnerMachine(6, 7, 8) ||
-            CheckForWinnerMachine(0, 3, 6) || CheckForWinnerMachine(1, 4, 7) || CheckForWinnerMachine(2, 5, 8) ||
-            CheckForWinnerMachine(0, 4, 8) || CheckForWinnerMachine(2, 4, 6))
+                 CheckForWinnerMachine(0, 3, 6) || CheckForWinnerMachine(1, 4, 7) || CheckForWinnerMachine(2, 5, 8) ||
+                 CheckForWinnerMachine(0, 4, 8) || CheckForWinnerMachine(2, 4, 6))
         {
             GameOver(computerSide);
         }
@@ -138,14 +157,28 @@ public class GameController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Check if I win
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="c"></param>
+    /// <returns></returns>
     private bool CheckForWinner(int a, int b, int c)
     {
         // Convertir los valores de texto en los botones a mayúsculas y comparar
         return buttonList[a].text == playerSide &&
-                buttonList[b].text == playerSide &&
-                buttonList[c].text == playerSide;
+               buttonList[b].text == playerSide &&
+               buttonList[c].text == playerSide;
     }
 
+    /// <summary>
+    /// Check if the machine won
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="c"></param>
+    /// <returns></returns>
     private bool CheckForWinnerMachine(int a, int b, int c)
     {
         return buttonList[a].text == GetComputerSide() &&
@@ -162,12 +195,10 @@ public class GameController : MonoBehaviour
     }
 
     /// <summary>
-    /// Establece todos los botones en la lista de botones como no interactivos, indicando que el juego ha terminado.
+    /// Sets all buttons in the button list to non-interactive, indicating that the game is over.
     /// </summary>
     void GameOver(string winningPlayer)
     {
-
-        Debug.Log(winningPlayer);
 
         SetBoardInteratable(false);
 
@@ -187,26 +218,27 @@ public class GameController : MonoBehaviour
         restartButton.SetActive(true);
     }
 
+    /// <summary>
+    /// Change of players
+    /// </summary>
     void ChangeSides()
     {
         playerMove = (playerMove == true) ? false : true;
-
-        //if (playerMove)
-        //{
-        //SetPlayerColors(playerX, playerO);
-        //}
-        //else
-        //{
-        //SetPlayerColors(playerO, playerX);
-        //}
     }
 
+    /// <summary>
+    /// Set of param value to game over
+    /// </summary>
+    /// <param name="value"></param>
     void SetGameOverText(string value)
     {
         gameOverPanel.SetActive(true);
         gameOverText.text = value;
     }
 
+    /// <summary>
+    /// Reset game
+    /// </summary>
     public void RestartGame()
     {
 
@@ -226,6 +258,10 @@ public class GameController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// inactivate buttons when they have already been pressed or the game has not started
+    /// </summary>
+    /// <param name="toggle"></param>
     void SetBoardInteratable(bool toggle)
     {
         for (int i = 0; i < buttonList.Length; i++)
@@ -234,6 +270,10 @@ public class GameController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set the buttons with the interactivity of each player
+    /// </summary>
+    /// <param name="toggle"></param>
     void SetPlayerButtons(bool toggle)
     {
         playerX.button.interactable = toggle;
