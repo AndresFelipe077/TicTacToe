@@ -2705,7 +2705,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6a9e552310a05d489ec866e0dbc8f83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  APIKey: sk-proj-WkYFl9fhzDzlg9hLwzJNT3BlbkFJMtSLaJhjxhni4cox9a3h
+  APIKey: 
   prompt: hola
   result: 'Error: Rate limit exceeded. Please try again later.'
 --- !u!114 &1240479547 stripped
