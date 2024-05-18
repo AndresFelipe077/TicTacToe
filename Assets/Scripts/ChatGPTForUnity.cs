@@ -28,20 +28,18 @@ public class ChatGPTForUnity : MonoBehaviour
         result = string.Empty;
 
         requestBodyChatGPT = new RequestBodyChatGPT();
-        requestBodyChatGPT.model = "text-davinci-003";
+        requestBodyChatGPT.model = "gpt-3.5-turbo"; // Actualiza el nombre del modelo
         requestBodyChatGPT.prompt = prompt;
         requestBodyChatGPT.max_tokens = 2048;
         requestBodyChatGPT.temperature = 0;
 
         StartCoroutine(SendRequestAPI());
-
     }
 
     private IEnumerator SendRequestAPI()
     {
-        Debug.Log(APIKey);
-
         string jsonData = JsonUtility.ToJson(requestBodyChatGPT);
+        Debug.Log("JSON Data: " + jsonData);
 
         byte[] rawData = Encoding.UTF8.GetBytes(jsonData);
 
@@ -50,9 +48,6 @@ public class ChatGPTForUnity : MonoBehaviour
         requestChatGPT.uploadHandler = new UploadHandlerRaw(rawData);
         requestChatGPT.downloadHandler = new DownloadHandlerBuffer();
 
-        //-H "Content-Type: application/json" \
-        //-H "Authorization: Bearer $OPENAI_API_KEY" \
-
         requestChatGPT.SetRequestHeader("Content-Type", "application/json");
         requestChatGPT.SetRequestHeader("Authorization", "Bearer " + APIKey);
 
@@ -60,20 +55,34 @@ public class ChatGPTForUnity : MonoBehaviour
 
         yield return requestChatGPT.SendWebRequest();
 
-
         if (requestChatGPT.result == UnityWebRequest.Result.Success)
         {
+            Debug.Log("Response: " + requestChatGPT.downloadHandler.text);
             responseBodyChatGPT = JsonUtility.FromJson<ResponseBodyChatGPT>(requestChatGPT.downloadHandler.text);
             result = responseBodyChatGPT.choices[0].text;
-
         }
         else
         {
-            result = "Error: " + requestChatGPT.result;
+            Debug.LogError("Error: " + requestChatGPT.error);
+            Debug.LogError("Response Code: " + requestChatGPT.responseCode);
+            Debug.LogError("Response: " + requestChatGPT.downloadHandler.text);
+
+            // Manejar errores específicos
+            if (requestChatGPT.responseCode == 429) // Too Many Requests
+            {
+                result = "Error: Rate limit exceeded. Please try again later.";
+            }
+            else if (requestChatGPT.responseCode == 402) // Payment Required
+            {
+                result = "Error: Insufficient quota. Please check your plan and billing details.";
+            }
+            else
+            {
+                result = "Error: " + requestChatGPT.error;
+            }
         }
 
         requestChatGPT.Dispose();
-
     }
 
     public void Clear()
